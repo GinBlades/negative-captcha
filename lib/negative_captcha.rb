@@ -1,6 +1,5 @@
 require 'digest/md5'
 require 'action_view'
-require 'active_support/hash_with_indifferent_access'
 
 class NegativeCaptcha
   attr_accessor :fields,
@@ -46,7 +45,7 @@ This usually happens because an automated script attempted to submit this form.
       hash
     end
 
-    self.values = HashWithIndifferentAccess.new
+    self.values = {}
     self.error = "No params provided"
 
     if opts[:params] && (opts[:params][:spinner] || opts[:params][:timestamp])
@@ -79,7 +78,7 @@ Error: Hidden form fields were submitted that should not have been. #{message}
       self.error = ""
 
       fields.each do |name, encrypted_name|
-        self.values[name] = params[encrypted_name] if params.include? encrypted_name
+        self.values[name.to_s] = params[encrypted_name] if params.include? encrypted_name
       end
     end
   end
